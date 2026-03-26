@@ -4,7 +4,11 @@
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "esModuleInterop": true,
-    "strict": true,
+    "baseUrl": ".",
+    "paths": {
+      "@my-app/shared": ["packages/shared/src/index.ts"],
+      "@my-app/shared/*": ["packages/shared/src/*"]
+    },
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   }
