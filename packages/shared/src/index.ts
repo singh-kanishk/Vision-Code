@@ -1,11 +1,11 @@
+export { roomFormSchema } from '../form/formSchema/room-form-schema.js'
 
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-}
+export * from './types.js'
+export type {roomFormValues} from "../form/formSchema/room-form-schema.ts"
+
+export const PORT ={
+    server:3000,
+    db:5342
+} as const
 
 
-export const formatGreeting = (user: User): string => {
-  return `Hello, ${user.name}! Welcome back.`;
-};

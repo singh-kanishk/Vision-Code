@@ -1,23 +1,33 @@
 import express from 'express';
-// Importing our shared code!
-import { User, formatGreeting } from '@my-app/shared';
+import { PORT } from '@my-app/shared';
+import { Server } from 'socket.io';
+import http from 'http';
+import { setupLobbies } from './routes/lobbies.js';
 
 const app = express();
-const PORT = 3000;
+const backendPort= PORT.server||3000;
 
-app.get('/api/user', (req, res) => {
-  const mockUser: User = {
-    id: '1',
-    name: 'Developer',
-    email: 'dev@example.com'
-  };
+const allowedOrigins = [
+  'http://localhost:5173',
+  `http://localhost:${backendPort}`
+];
 
-  res.json({
-    user: mockUser,
-    greeting: formatGreeting(mockUser)
-  });
+const httpServer = http.createServer(app);
+
+export const io = new Server(httpServer, {
+  cors: {
+    origin:allowedOrigins,
+    methods:['GET','POST']
+  }
+})
+
+
+app.use(express.json())
+
+
+
+httpServer.listen(backendPort, () => {
+  console.log(`Backend server running on http://localhost:${backendPort}`);
 });
 
-app.listen(PORT, () => {
-  console.log(`Backend server running on http://localhost:${PORT}`);
-});
+setupLobbies(io);

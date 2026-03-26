@@ -52,3 +52,26 @@ Thumbs.db
 *.njsproj
 *.sln
 *.sw?
+
+# pnpm store
+.pnpm-store/
+
+# Monorepo package builds
+packages/**/dist/
+packages/**/build/
+packages/**/.turbo/
+
+# Optional caches
+cache/
+
+# temporary folders
+temp/
+
+# backend drizzle artifacts
+packages/backend/drizzle/
+packages/backend/drizzle.config.ts
+packages/backend/drizzle/*.sql
+packages/backend/drizzle/meta/*
+
+/.prettierrc
+/.npmrc
