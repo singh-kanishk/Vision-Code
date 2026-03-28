@@ -26,7 +26,7 @@ import { useUserDataStore } from "@/store/useUserDataStore"
 import { useLobbyStore } from "@/store/useLobbyStore"
 
 export function JoinRoomForm(){
-    const username = useUserDataStore((state) => state.username) || 'No Username'
+    const username = useUserDataStore((state) => state.name) || 'No Username'
     const setCurrentLobby = useUserDataStore((state) => state.setCurrentLobby)
     const setLobby = useLobbyStore((state) => state.setLobby)
     const [socketError, setSocketError] = useState<string | null>(null)
