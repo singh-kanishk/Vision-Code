@@ -57,6 +57,7 @@ export const Canvas = () => {
       {/* Canvas */}
       <Stage
         width={700}
+        
         height={400}
         style={{
           border: '1px solid #060202',
