@@ -24,11 +24,11 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
 
-    
+    /* Path Aliases */
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
+      "@/*": ["./src/*"],
+      "@my-app/shared": ["../shared/src/index.ts"],
+      "@my-app/shared/*": ["../shared/src/*"]
     }
   },
   "include": ["src"]

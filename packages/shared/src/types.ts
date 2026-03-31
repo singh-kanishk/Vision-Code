@@ -11,10 +11,11 @@ export interface Lobby {
   passcode:string;
   users: User[];
   status: 'waiting' | 'starting' | 'in-progress';
+  lines:Line[]
 }
 
 export type Point = [number, number, number]; // [x, y, pressure]
-export type Line = { points: Point[], color: string };
+export type Line = { points: Point[], color: string  ,lineId :string};
 
 export const PORT ={
     server:3000,
@@ -22,3 +23,15 @@ export const PORT ={
 } as const
 
 
+export interface SendPointEventSchema {
+    roomId:string,
+    point?:Point,
+    completeLine?:Line,
+    flag:'start-point'|'end-point'|'mid-point',
+    lineId:string,
+    color?:string,
+}
+export interface UndoLineSchema{
+  roomId:string,
+  lineId:string
+}

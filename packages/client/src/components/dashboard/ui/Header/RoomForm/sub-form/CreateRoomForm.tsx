@@ -26,7 +26,7 @@ import { useUserDataStore } from "@/store/useUserDataStore"
 import { useLobbyStore } from "@/store/useLobbyStore"
 
 export function CreateRoomForm(){
-    const username  = useUserDataStore((state)=>(state.name))||'No Username'
+    const username  = useUserDataStore((state)=>(state.name))||''
     const setCurrentLobby = useUserDataStore((state) => state.setCurrentLobby)
     const setLobby = useLobbyStore((state) => state.setLobby)
     const [socketError, setSocketError] = useState<string | null>(null)
@@ -59,6 +59,7 @@ export function CreateRoomForm(){
     });
 
     function onSubmit(data:roomFormValues){
+     
        setSocketError(null)
        socket.emit('create_lobby', { ...data, username })
     }
@@ -83,7 +84,7 @@ export function CreateRoomForm(){
                 {/* 'field' contains: { onChange, onBlur, value, ref } 
                    We spread it here so the Input gets all those props.
                 */}
-                <Input placeholder="room...room..." type="password" {...field} />
+                <Input placeholder="room...room..." type="text" {...field} />
               </FormControl>
               <FormMessage/>
             </FormItem>
@@ -100,7 +101,7 @@ export function CreateRoomForm(){
                 {/* 'field' contains: { onChange, onBlur, value, ref } 
                    We spread it here so the Input gets all those props.
                 */}
-                <Input placeholder="secretOfJohnDoe123" type="password" {...field} />
+                <Input placeholder="secretOfJohnDoe123" type="text" {...field} />
               </FormControl>
               <FormMessage/>
             </FormItem>
@@ -126,3 +127,4 @@ export function CreateRoomForm(){
 )
 }
 
+ 

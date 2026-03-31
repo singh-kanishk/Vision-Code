@@ -3,6 +3,7 @@ import { PORT } from '@my-app/shared';
 import { Server } from 'socket.io';
 import http from 'http';
 import { setupLobbies } from './routes/lobbies.js';
+import { setCanvas } from './routes/canvas.js';
 
 const app = express();
 const backendPort= PORT.server||3000;
@@ -31,3 +32,4 @@ httpServer.listen(backendPort, () => {
 });
 
 setupLobbies(io);
+setCanvas(io)

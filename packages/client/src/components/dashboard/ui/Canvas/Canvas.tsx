@@ -1,22 +1,39 @@
 import { useEffect, useRef } from 'react';
 import { Stage } from 'react-konva';
 import type { KonvaEventObject } from 'konva/lib/Node';
-import { useDrawingStore } from '@/store/useCanvasStore';
-import { StaticLayer } from './utils/StaticLayer.tsx';
-import { ActiveLayer } from './utils/ActiveLayer.tsx';
+import { useHostDrawingStore } from '@/store/useUserCanvasStore.ts';
+import { useEventCanvasStore } from '@/store/useEventCanvasStore.ts';
+import { StaticLayer } from './utils/Layers/StaticLayer.tsx';
+import { ActiveLayer } from './utils/Layers/ActiveLayer.tsx';
 import { ColorPallete } from './utils/ColorPallette.tsx';
+import { socket } from '@/utils/socket-setup.ts';
+import type { SendPointEventSchema } from '@my-app/shared';
 
+type DrawLinePayload = Omit<SendPointEventSchema, 'roomId' | 'completeLine'> & {
+  point: SendPointEventSchema['point'] | null;
+};
 
 export const Canvas = () => {
-
-  
-  const startLine = useDrawingStore((state) => state.startLine);
-  const addPointToCurrentLine = useDrawingStore(
+  const startLine = useHostDrawingStore((state) => state.startLine);
+  const addPointToCurrentLine = useHostDrawingStore(
     (state) => state.addPointToCurrentLine,
   );
-  const finishLine = useDrawingStore((state) => state.finishLine);
+  const finishLine = useHostDrawingStore((state) => state.finishLine);
+
+  const remoteStartLine = useEventCanvasStore((state) => state.startLine);
+  const remoteAddPointToLine = useEventCanvasStore(
+    (state) => state.addPointToLine,
+  );
+  const remoteFinishLine = useEventCanvasStore(
+    (state) => state.finishLine,
+  );
+  const remoteUndo = useEventCanvasStore((state) => state.undo);
+  const remoteClearCanvas = useEventCanvasStore(
+    (state) => state.clearCanvas,
+  );
 
   const isDrawing = useRef<boolean>(false);
+  const currentLineId = useRef<string | null>(null);
 
   const handlePointerDown = (e: KonvaEventObject<PointerEvent>): void => {
     isDrawing.current = true;
@@ -26,12 +43,13 @@ export const Canvas = () => {
     const pos = stage.getPointerPosition();
     if (!pos) return;
 
+    currentLineId.current = crypto.randomUUID();
     const pressure = e.evt.pressure ?? 0.5;
-    startLine([pos.x, pos.y, pressure]);
+    startLine(currentLineId.current, [pos.x, pos.y, pressure], '');
   };
 
   const handlePointerMove = (e: KonvaEventObject<PointerEvent>): void => {
-    if (!isDrawing.current) return;
+    if (!isDrawing.current || !currentLineId.current) return;
 
     const stage = e.target.getStage();
     if (!stage) return;
@@ -40,42 +58,83 @@ export const Canvas = () => {
     if (!pos) return;
 
     const pressure = e.evt.pressure ?? 0.5;
-    addPointToCurrentLine([pos.x, pos.y, pressure]);
+    addPointToCurrentLine(currentLineId.current, [
+      pos.x,
+      pos.y,
+      pressure,
+    ]);
   };
 
   const handlePointerUp = (): void => {
     if (!isDrawing.current) return;
     isDrawing.current = false;
-    finishLine();
+    finishLine(currentLineId.current || '');
   };
 
+  useEffect(() => {
+    const handleDrawLine = (data: DrawLinePayload) => {
+      if (!data?.lineId) return;
 
-  useEffect(()=>{},[] )
+      if (data.flag === 'start-point') {
+        if (data.point) remoteStartLine(data.lineId, data.point, data.color);
+        return;
+      }
+
+      if (data.flag === 'mid-point') {
+        if (data.point) remoteAddPointToLine(data.lineId, data.point);
+        return;
+      }
+
+      // 'end-point'
+      remoteFinishLine(data.lineId);
+    };
+
+    const handleUndoLine = (obj: { lineId: string }) => {
+      if (obj?.lineId) remoteUndo(obj.lineId);
+    };
+
+    const handleClearCanvas = () => remoteClearCanvas();
+
+    socket.on('draw_line', handleDrawLine);
+    socket.on('undo_line', handleUndoLine);
+    socket.on('clear_canvas', handleClearCanvas);
+
+    return () => {
+      socket.off('draw_line', handleDrawLine);
+      socket.off('undo_line', handleUndoLine);
+      socket.off('clear_canvas', handleClearCanvas);
+    };
+  }, [
+    remoteAddPointToLine,
+    remoteClearCanvas,
+    remoteFinishLine,
+    remoteStartLine,
+    remoteUndo,
+  ]);
+
   return (
     <div className="flex flex-col gap-4 items-start">
       <div>
-      {/* Canvas */}
-      <Stage
-        width={700}
-        
-        height={400}
-        style={{
-          border: '1px solid #060202',
-          backgroundColor: '#fafafa',
-          touchAction: 'none',
-        }}
-        onPointerDown={handlePointerDown}
-        onPointerMove={handlePointerMove}
-        onPointerUp={handlePointerUp}
-        onPointerLeave={handlePointerUp}
-      >
-        <StaticLayer />
-        <ActiveLayer />
-      </Stage>
+        <Stage
+          width={700}
+          height={400}
+          style={{
+            border: '1px solid #060202',
+            backgroundColor: '#fafafa',
+            touchAction: 'none',
+          }}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          onPointerLeave={handlePointerUp}
+        >
+          <StaticLayer />
+          <ActiveLayer />
+        </Stage>
       </div>
       <div>
-      <ColorPallete/>
-      </div>      
+        <ColorPallete />
+      </div>
     </div>
   );
 };

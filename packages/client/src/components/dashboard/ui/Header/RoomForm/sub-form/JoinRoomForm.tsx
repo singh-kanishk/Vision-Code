@@ -24,12 +24,14 @@ import { roomFormSchema } from "@my-app/shared"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useUserDataStore } from "@/store/useUserDataStore"
 import { useLobbyStore } from "@/store/useLobbyStore"
+import { useHostDrawingStore } from "@/store/useUserCanvasStore"
 
 export function JoinRoomForm(){
-    const username = useUserDataStore((state) => state.name) || 'No Username'
+    const username = useUserDataStore((state) => state.name) || ''
     const setCurrentLobby = useUserDataStore((state) => state.setCurrentLobby)
     const setLobby = useLobbyStore((state) => state.setLobby)
     const [socketError, setSocketError] = useState<string | null>(null)
+    const setLines = useHostDrawingStore((state)=>state.setLine)
 
     useEffect(() => {
       function handleError(err: { message: string }) {
@@ -39,11 +41,13 @@ export function JoinRoomForm(){
       function handleSuccess(lobby: Lobby) {
         setCurrentLobby(lobby.roomId)
         setLobby(lobby)
+        setLines(lobby.lines)
         document.getElementById('drawer-close-join')?.click()
       }
       
       socket.on('error', handleError)
       socket.on('lobby_joined', handleSuccess)
+
       return () => {
         socket.off('error', handleError)
         socket.off('lobby_joined', handleSuccess)
@@ -82,7 +86,7 @@ export function JoinRoomForm(){
                 {/* 'field' contains: { onChange, onBlur, value, ref } 
                    We spread it here so the Input gets all those props.
                 */}
-                <Input placeholder="Johndoe123" {...field} />
+                <Input type="text" placeholder="Johndoe123" {...field} />
               </FormControl>
               <FormMessage/>
             </FormItem>
@@ -98,7 +102,7 @@ export function JoinRoomForm(){
                 {/* 'field' contains: { onChange, onBlur, value, ref } 
                    We spread it here so the Input gets all those props.
                 */}
-                <Input placeholder="secretOfJohnDoe123" type="password" {...field} />
+                <Input placeholder="secretOfJohnDoe123" type="text" {...field} />
               </FormControl>
               <FormMessage/>
             </FormItem>

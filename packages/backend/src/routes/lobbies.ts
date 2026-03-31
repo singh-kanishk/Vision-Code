@@ -1,17 +1,21 @@
 import { Socket, Server } from "socket.io";
 
 import type { Lobby,User } from "@my-app/shared";
+import { Line } from "@my-app/shared";
 
-const lobbies = new Map<string, Lobby>();
+export const lobbies = new Map<string, Lobby>();
 
 export function setupLobbies(io: Server) {
   io.on('connection', (socket: Socket) => {
 
   // 1. CREATE A LOBBY
   socket.on('create_lobby', (data: { roomId?: string , passcode?:string ,username?:string }) => {
-    const { passcode, roomId ,username} = data || {};
+
+    const username= data.username||`Player 1`
+    const { passcode, roomId } = data || {};
     
-    if (!roomId || !passcode || !username) {
+    
+    if (!roomId || !passcode ) {
       socket.emit('error', { message: 'Missing required fields' });
       return;
     }
@@ -26,6 +30,7 @@ export function setupLobbies(io: Server) {
       hostId: socket.id,
       users: [{ socketId: socket.id, username }],
       passcode,
+      lines:[],
       status: 'waiting'
     };
 
@@ -40,9 +45,10 @@ export function setupLobbies(io: Server) {
 
   // 2. JOIN A LOBBY
   socket.on('join_lobby', (data: { username?: string, roomId?: string, passcode?: string }) => {
-    const { username, roomId , passcode} = data || {};
-
-    if (!roomId || !passcode || !username) {
+    
+    const {  roomId , passcode} = data || {};
+    let username = data.username
+    if (!roomId || !passcode) {
       socket.emit('error', { message: 'Missing required fields' });
       return;
     }
@@ -59,6 +65,9 @@ export function setupLobbies(io: Server) {
       return;
     }
 
+    if(!username){
+      username = `Player ${lobby.users.length+1}`
+    }
     // Add user to our in-memory state
     lobby.users.push({ socketId: socket.id, username });
     

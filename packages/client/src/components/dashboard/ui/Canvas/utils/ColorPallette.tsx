@@ -1,6 +1,6 @@
-import { Button } from "@/components/ui/button";
-import { useDrawingStore } from "@/store/useCanvasStore";
 
+import { Button } from "@/components/ui/button";
+import { useHostDrawingStore } from "@/store/useUserCanvasStore";
 
 const COLORS = [
   '#1e1e1e',
@@ -13,42 +13,51 @@ const COLORS = [
   '#ffa500',
 ];
 
-export function ColorPallete(){
-
-      const strokeColor = useDrawingStore((state) => state.strokeColor);
-      const setStrokeColor = useDrawingStore((state) => state.setStrokeColor);
-      const undo = useDrawingStore((state) => state.undo);
+export const ColorPallete = () => {
+  const strokeColor = useHostDrawingStore((state) => state.strokeColor);
+  const setStrokeColor = useHostDrawingStore((state) => state.setStrokeColor);      
+  const undo = useHostDrawingStore((state) => state.undo);
+  
+  // Custom handler to safely grab the ID and pass it to your store
+  const handleUndo = () => {
+    // 1. Get the absolute latest lines array on-demand
+    const currentLines = useHostDrawingStore.getState().lines;
     
-
-    return (
-        <>
-        {/* Color Palette and Controls */}
-      <div className="flex flex-col p-2 gap-2 bg-gray-100 rounded-lg h-fit">
-        <span className="text-l font-medium text-gray-700">Colors:</span>
-        <div className="flex gap-1">
-          {COLORS.map((color) => (
-            <Button
-              key={color}
-              onClick={() => setStrokeColor(color)}
-              className={`w-8 h-8 rounded border-2 transition-all ${
-                strokeColor === color
-                  ? 'border-gray-800 shadow-md scale-110'
-                  : 'border-gray-300 hover:border-gray-500'
-              }`}
-              style={{ backgroundColor: color }}
-              title={color}
-            />
-          ))}
-        </div>
-        <div>
-        <Button
-          onClick={undo}
-          className=" px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded font-medium transition-colors w-15"
-        >
-        Undo
-        </Button>
-        </div>
+    // 2. Find the last line safely
+    const lastLine = currentLines.at(-1);
+    
+    // 3. If a line exists, pass its ID to your store's undo function
+    if (lastLine?.lineId) {
+      undo(lastLine.lineId);
+    }
+  };
+      
+  return (
+    <div className="flex flex-col p-2 gap-2 bg-gray-100 rounded-lg h-fit">
+      <span className="text-l font-medium text-gray-700">Colors:</span>
+      
+      <div className="flex gap-1">
+        {COLORS.map((color) => (
+          <Button
+            key={color}
+            onClick={() => setStrokeColor(color)}
+            className={`w-8 h-8 rounded border-2 transition-all ${
+              strokeColor === color
+                ? 'border-gray-800 shadow-md scale-110'
+                : 'border-gray-300 hover:border-gray-500'
+            }`}
+            style={{ backgroundColor: color }}
+            title={color}
+          />
+        ))}
       </div>
-        </>
-    )
-}
+
+      <div>
+        {/* Call our custom handler instead of undo directly */}
+        <Button onClick={handleUndo}>
+          Undo
+        </Button>
+      </div>
+    </div>
+  );
+};
