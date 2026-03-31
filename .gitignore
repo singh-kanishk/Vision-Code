@@ -75,3 +75,8 @@ packages/backend/drizzle/meta/*
 
 /.prettierrc
 /.npmrc
+
+# Explicitly ban compiled artifacts from sneaking into your source code
+src/**/*.js
+src/**/*.d.ts
+src/**/*.map
