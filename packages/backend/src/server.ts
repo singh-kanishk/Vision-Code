@@ -1,9 +1,12 @@
+import 'dotenv/config';
 import express from 'express';
+import cors from 'cors';
 import { PORT } from '@my-app/shared';
 import { Server } from 'socket.io';
 import http from 'http';
 import { setupLobbies } from './routes/lobbies.js';
 import { setCanvas } from './routes/canvas.js';
+import { apiRouter } from './routes/routes.js';
 
 const app = express();
 const backendPort= PORT.server||3000;
@@ -23,8 +26,14 @@ export const io = new Server(httpServer, {
 })
 
 
-app.use(express.json())
-
+app.use(express.json({ limit: '50mb' }))
+app.use(
+  cors({
+    origin: allowedOrigins,
+    methods: ['GET', 'POST'],
+  }),
+);
+app.use('/api',apiRouter)
 
 
 httpServer.listen(backendPort, () => {

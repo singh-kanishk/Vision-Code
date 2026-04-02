@@ -35,3 +35,10 @@ export interface UndoLineSchema{
   roomId:string,
   lineId:string
 }
+export interface RectangleData {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  color: string;
+}

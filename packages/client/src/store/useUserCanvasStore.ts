@@ -1,14 +1,17 @@
 import { create } from 'zustand';
-// Import your actual socket instance here
 import type { Line, Point } from '@my-app/shared';
 import { useLobbyStore } from './useLobbyStore';
 import { emitClearCanvas, emitPoint, emitUndoLine } from '@/components/dashboard/ui/Canvas/utils/events/emit-point';
+import Konva from 'konva';
+import { createRef } from 'react';
 
 export interface DrawingState {
   
   lines: Line[];
   currentLine: Point[] | null;
   strokeColor: string;
+  ref: React.RefObject<Konva.Stage | null>;
+  setRef: (ref: React.RefObject<Konva.Stage | null>) => void;
 
   setLine:(lines:Line[])=>void
   setStrokeColor: (color: string) => void;
@@ -26,16 +29,15 @@ export const useHostDrawingStore = create<DrawingState>((set, get) => ({
   lines: [],
   currentLine: null,
   strokeColor: '#1e1e1e',
+  ref: createRef<Konva.Stage | null>(),
 
+  setRef: (ref) => set({ ref }),
   setStrokeColor: (color) => set({ strokeColor: color }),
-  setLine:(obj)=>{
-    const newLines = get().lines
-      for(let i of obj){
-        newLines.push(i)
-      }
-     set((state) => ({
-      lines:[...state.lines,...newLines]
-     }));
+
+  setLine:(newLines)=>{
+    set((state) => ({
+      lines: [...state.lines, ...newLines]
+    }));
     
   },
   startLine: (lineId, point, color) => {

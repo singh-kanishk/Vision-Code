@@ -1,13 +1,16 @@
 import { useEffect, useRef } from 'react';
 import { Stage } from 'react-konva';
+import Konva from 'konva';
 import type { KonvaEventObject } from 'konva/lib/Node';
 import { useHostDrawingStore } from '@/store/useUserCanvasStore.ts';
 import { useEventCanvasStore } from '@/store/useEventCanvasStore.ts';
 import { StaticLayer } from './utils/Layers/StaticLayer.tsx';
 import { ActiveLayer } from './utils/Layers/ActiveLayer.tsx';
 import { ColorPallete } from './utils/ColorPallette.tsx';
+import { ShapeSelector } from './utils/ShapeSelector.tsx';
 import { socket } from '@/utils/socket-setup.ts';
 import type { SendPointEventSchema } from '@my-app/shared';
+import { Generator } from '../Generator/Generator.tsx';
 
 type DrawLinePayload = Omit<SendPointEventSchema, 'roomId' | 'completeLine'> & {
   point: SendPointEventSchema['point'] | null;
@@ -31,10 +34,11 @@ export const Canvas = () => {
   const remoteClearCanvas = useEventCanvasStore(
     (state) => state.clearCanvas,
   );
+  const setStoreRef= useHostDrawingStore((state)=>(state.setRef))
 
   const isDrawing = useRef<boolean>(false);
   const currentLineId = useRef<string | null>(null);
-
+ 
   const handlePointerDown = (e: KonvaEventObject<PointerEvent>): void => {
     isDrawing.current = true;
     const stage = e.target.getStage();
@@ -43,6 +47,9 @@ export const Canvas = () => {
     const pos = stage.getPointerPosition();
     if (!pos) return;
 
+    
+
+    
     currentLineId.current = crypto.randomUUID();
     const pressure = e.evt.pressure ?? 0.5;
     startLine(currentLineId.current, [pos.x, pos.y, pressure], '');
@@ -56,6 +63,7 @@ export const Canvas = () => {
 
     const pos = stage.getPointerPosition();
     if (!pos) return;
+
 
     const pressure = e.evt.pressure ?? 0.5;
     addPointToCurrentLine(currentLineId.current, [
@@ -111,7 +119,11 @@ export const Canvas = () => {
     remoteStartLine,
     remoteUndo,
   ]);
-
+  
+  const stageRef = useRef<Konva.Stage | null>(null);
+  useEffect(() => {
+    setStoreRef(stageRef);
+  }, [setStoreRef]);
   return (
     <div className="flex flex-col gap-4 items-start">
       <div>
@@ -123,6 +135,7 @@ export const Canvas = () => {
             backgroundColor: '#fafafa',
             touchAction: 'none',
           }}
+          ref={stageRef}
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
@@ -132,8 +145,12 @@ export const Canvas = () => {
           <ActiveLayer />
         </Stage>
       </div>
-      <div>
+      <div className='flex gap-2'>
         <ColorPallete />
+        <ShapeSelector/>
+      </div>
+      <div className='flex'>
+      <Generator/>
       </div>
     </div>
   );
