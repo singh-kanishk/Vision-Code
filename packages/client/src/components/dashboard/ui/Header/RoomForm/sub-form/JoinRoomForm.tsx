@@ -28,6 +28,7 @@ import { useHostDrawingStore } from "@/store/useUserCanvasStore"
 
 export function JoinRoomForm(){
     const username = useUserDataStore((state) => state.name) || ''
+    const setUserName= useUserDataStore((state)=>(state.setName))
     const setCurrentLobby = useUserDataStore((state) => state.setCurrentLobby)
     const setLobby = useLobbyStore((state) => state.setLobby)
     const [socketError, setSocketError] = useState<string | null>(null)
@@ -38,10 +39,11 @@ export function JoinRoomForm(){
         setSocketError(err.message)
       }
       
-      function handleSuccess(lobby: Lobby) {
+      function handleSuccess(lobby: Lobby,username:string) {
         setCurrentLobby(lobby.roomId)
         setLobby(lobby)
         setLines(lobby.lines)
+        setUserName(username)
         document.getElementById('drawer-close-join')?.click()
       }
       

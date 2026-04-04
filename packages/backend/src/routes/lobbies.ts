@@ -1,7 +1,6 @@
 import { Socket, Server } from "socket.io";
 
-import type { Lobby,User } from "@my-app/shared";
-import { Line } from "@my-app/shared";
+import type { Lobby } from "@my-app/shared";
 
 export const lobbies = new Map<string, Lobby>();
 
@@ -75,7 +74,7 @@ export function setupLobbies(io: Server) {
     socket.join(roomId);
 
     // Tell the user they joined successfully
-    socket.emit('lobby_joined', lobby);
+    socket.emit('lobby_joined', lobby , username);
     
     // Broadcast to everyone else in the room that a new user joined
     socket.to(roomId).emit('user_joined', { 

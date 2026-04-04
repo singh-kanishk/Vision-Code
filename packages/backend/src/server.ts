@@ -7,6 +7,7 @@ import http from 'http';
 import { setupLobbies } from './routes/lobbies.js';
 import { setCanvas } from './routes/canvas.js';
 import { apiRouter } from './routes/routes.js';
+import { setText } from './routes/message.js';
 
 const app = express();
 const backendPort= PORT.server||3000;
@@ -41,4 +42,5 @@ httpServer.listen(backendPort, () => {
 });
 
 setupLobbies(io);
-setCanvas(io)
+setCanvas(io);
+setText(io);

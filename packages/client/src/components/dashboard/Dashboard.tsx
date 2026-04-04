@@ -16,7 +16,7 @@ export function Dashboard() {
         <div className="flex-1 border-b border-border">
           <Canvas />
         </div>
-        <div className="w-1/4 border-l border-border">
+        <div className="w-1/4 border-l border overflow-y-auto">
           <ChatBox />
         </div>
       </div>

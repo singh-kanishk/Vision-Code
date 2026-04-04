@@ -42,3 +42,8 @@ export interface RectangleData {
   height: number;
   color: string;
 }
+export interface MessageData {
+  userName:string;
+  message:string
+  roomId?:string
+}

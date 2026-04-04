@@ -22,6 +22,7 @@ export function LoginForm() {
     },
   });
   const setName = useUserDataStore((state)=>(state.setName))
+  const setIsNameThere=useUserDataStore((state)=>(state.setIsNameCreated))
   const onSubmit = (data: FormData) => {
 
     if (data.name.length < 3) {
@@ -41,6 +42,7 @@ export function LoginForm() {
     // 3. Success state
     console.log("Submitted successfully:", data.name);
     setName(data.name)
+    setIsNameThere(true)
     methods.reset(); 
   };
 return (
