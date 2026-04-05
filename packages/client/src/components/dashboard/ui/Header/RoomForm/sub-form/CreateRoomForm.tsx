@@ -28,7 +28,8 @@ import { useLobbyStore } from "@/store/useLobbyStore"
 export function CreateRoomForm(){
     const username  = useUserDataStore((state)=>(state.name))||''
     const setCurrentLobby = useUserDataStore((state) => state.setCurrentLobby)
-    const setLobby = useLobbyStore((state) => state.setLobby)
+    const setLobby = useLobbyStore((state) => state.setLobby)    
+    const setUserName= useUserDataStore((state)=>(state.setName))
     const [socketError, setSocketError] = useState<string | null>(null)
 
     useEffect(() => {
@@ -39,6 +40,7 @@ export function CreateRoomForm(){
       function handleSuccess(lobby: Lobby) {
         setCurrentLobby(lobby.roomId)
         setLobby(lobby)
+        setUserName(username)
         document.getElementById('drawer-close-create')?.click()
       }
       

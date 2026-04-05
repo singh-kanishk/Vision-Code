@@ -23,7 +23,7 @@ interface MessageInterface{
 export function ChatBox() {
   const messages= useMessageStore((state)=>(state.messages))
   const username= useUserDataStore((state)=>(state.name))
-  const addMessage=useMessageStore((state)=>(state.sendMessage))
+  const addMessage= useMessageStore((state)=>(state.sendMessage))
   const roomId= useLobbyStore((state)=>(state.lobby?.roomId))
   const methods = useForm<MessageInterface>()  
   const lobby= useLobbyStore((state)=>(state.lobby))
@@ -39,6 +39,7 @@ export function ChatBox() {
       roomId:roomId||''
     }
     socket.emit('send_message',obj)
+    addMessage({message:data.message,userName:username})
     methods.reset({ message: '' });
   }
   useEffect(()=>{
@@ -74,13 +75,16 @@ export function ChatBox() {
       </Form>
     <div className="w-full h-full gap-2 p-2 flex flex-col justify-items-start overflow-y-auto bg-gray-100 dark:bg-gray-800">
       {
-      messages.map((message,index)=>(
-        <div className="flex-col p-2 border " key={index}>
-        <p className="text-xs">{message.userName}</p>
-        <p className="text-sm text-muted-foreground">{message.message}</p>
+      messages.map((message,index)=>
+      {
+        return(
+        <div className="flex-col justify-end p-2 border" key={index}>
+        <p className={`text-xs ${username==message.userName?'text-right':''}`}>{message.userName}</p>
+        <p className={`text-sm text-muted-foreground ${username==message.userName?'text-right':''}`}>{message.message}</p>
       </div>
-      
-      ))
+      )
+      }
+      )
       }
     </div>
      </div>

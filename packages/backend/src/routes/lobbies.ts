@@ -53,6 +53,10 @@ export function setupLobbies(io: Server) {
     }
 
     const lobby = lobbies.get(roomId);
+    if(lobbies.size>5){
+      socket.emit('error', { message: 'Lobby Is At Maximum Capacity 5/5' });
+      return;
+    }
 
     if (!lobby) {
       socket.emit('error', { message: 'Lobby not found' });

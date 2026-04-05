@@ -14,5 +14,6 @@ export const useMessageStore = create<MessageStoreInterface>((set)=>(
                 messages:[...state.messages,message]
             }))
         }
+        
     }
 ))

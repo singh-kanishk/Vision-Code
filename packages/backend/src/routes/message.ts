@@ -6,7 +6,7 @@ export function setText(io:Server){
     io.on('connection',(socket:Socket)=>{
         socket.on('send_message',(obj:MessageData)=>{
             if(obj.message!=='')
-            socket.to(obj.roomId||'').emit('get_message',{message:obj.message,username:obj.userName})
+            socket.to(obj.roomId||'').emit('get_message',{message:obj.message,userName:obj.userName})
         })
     })
 
