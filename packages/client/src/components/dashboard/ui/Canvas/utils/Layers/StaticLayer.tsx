@@ -1,39 +1,17 @@
-import { Layer, Path } from 'react-konva';
-import { getStroke } from 'perfect-freehand';
+import { Layer } from 'react-konva';
 import { useHostDrawingStore } from '@/store/useUserCanvasStore';
-import { getSvgPathFromStroke } from '@/utils/svgPathFromStroke';
 import { useEventCanvasStore } from '@/store/useEventCanvasStore';
+import { renderLineToKonva } from '../lineKonvaNodes';
 
 export const StaticLayer = () => {
   const lines = useHostDrawingStore((state) => state.lines);
   const remoteLines = useEventCanvasStore((state) => state.lines);
+  const brushSize = useHostDrawingStore((state) => state.brushSize);
 
   return (
     <Layer>
-      {lines.map((line) => {
-        const stroke = getStroke(line.points, {
-          size: 16,
-          thinning: 0.5,
-          smoothing: 0.5,
-          streamline: 0.5,
-        });
-
-        const pathData = getSvgPathFromStroke(stroke);
-
-        return <Path key={line.lineId} data={pathData} fill={line.color} />;
-      })}
-      {remoteLines.map((line) => {
-        const stroke = getStroke(line.points, {
-          size: 16,
-          thinning: 0.5,
-          smoothing: 0.5,
-          streamline: 0.5,
-        });
-
-        const pathData = getSvgPathFromStroke(stroke);
-
-        return <Path key={line.lineId} data={pathData} fill={line.color} />;
-      })}
+      {lines.map((line) => renderLineToKonva(line, brushSize))}
+      {remoteLines.map((line) => renderLineToKonva(line, brushSize))}
     </Layer>
   );
 };

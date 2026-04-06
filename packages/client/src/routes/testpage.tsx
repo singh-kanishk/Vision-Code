@@ -6,72 +6,72 @@ export const Route = createFileRoute('/testpage')({
 
 function About() {
     return (
-    <div className="min-h-screen bg-gray-50 p-8 sm:p-12">
-      <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Dashboard Features</h1>
-        <p className="text-xl text-gray-600 mb-10">Manage your core functionalities in one place.</p>
+    <div className="min-h-screen bg-gray-100 p-4 sm:p-8 flex items-center justify-center">
+      <div className="w-full max-w-4xl bg-white rounded-xl shadow-lg p-6 sm:p-8 border border-gray-200">
+        {/* Top Section: Header/Title */}
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+          <h1 className="text-2xl font-semibold text-blue-800">
+            Welcome to Our Application
+          </h1>
+          <p className="text-blue-700 text-sm mt-1">
+            A brief overview of the main section.
+          </p>
+        </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <FeatureCard
-            icon={<Zap className="w-5 h-5" />}
-            title="Performance Analytics"
-            description="Track key metrics, identify bottlenecks, and optimize your system efficiency with real-time data visualization."
-            onClick={() => console.log('Analytics clicked')}
-          />
-          <FeatureCard
-            icon={<User className="w-5 h-5" />}
-            title="User Management"
-            description="Onboard, manage permissions, and control access for all your team members securely through granular roles."
-            onClick={() => console.log('User Management clicked')}
-          />
-          <FeatureCard
-            icon={<Settings className="w-5 h-5" />}
-            title="System Settings"
-            description="Customize the entire platform experience, from branding to integration endpoints, to match your business needs."
-            onClick={() => console.log('Settings clicked')}
-          />
-          <FeatureCard
-            icon={<Zap className="w-5 h-5" />}
-            title="Billing & Subscriptions"
-            description="View invoices, manage payment methods, and upgrade your plan seamlessly without any downtime."
-            onClick={() => console.log('Billing clicked')}
-          />
+        {/* Middle Section: Two-column layout */}
+        <div className="flex flex-col md:flex-row gap-6 mb-6">
+          {/* Left Column: Stacked content blocks */}
+          <div className="flex-1 flex flex-col gap-4">
+            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+              <h3 className="font-medium text-gray-800">Feature Highlight One</h3>
+              <p className="text-gray-600 text-sm mt-1">
+                Discover the innovative solutions we offer to streamline your workflow and boost productivity.
+              </p>
+            </div>
+            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+              <h3 className="font-medium text-gray-800">Feature Highlight Two</h3>
+              <p className="text-gray-600 text-sm mt-1">
+                Our platform is designed with user experience in mind, ensuring ease of use for everyone.
+              </p>
+            </div>
+            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+              <h3 className="font-medium text-gray-800">Feature Highlight Three</h3>
+              <p className="text-gray-600 text-sm mt-1">
+                Experience robust security measures protecting your data at every step.
+              </p>
+            </div>
+            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+              <h3 className="font-medium text-gray-800">Feature Highlight Four</h3>
+              <p className="text-gray-600 text-sm mt-1">
+                Get real-time analytics and insights to make informed decisions faster.
+              </p>
+            </div>
+            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+              <h3 className="font-medium text-gray-800">Feature Highlight Five</h3>
+              <p className="text-gray-600 text-sm mt-1">
+                Seamless integration with your existing tools and services.
+              </p>
+            </div>
+          </div>
+
+          {/* Right Column: Image Placeholder */}
+          <div className="flex-1 bg-gradient-to-br from-purple-200 to-indigo-300 rounded-lg border border-purple-300 flex items-center justify-center p-6 min-h-[200px] md:min-h-full">
+            <img
+              src="https://placehold.co/600x400/8b5cf6/ffffff?text=Main+Visual"
+              alt="Placeholder for main visual content"
+              className="w-full h-auto object-cover rounded-md shadow-sm"
+            />
+          </div>
+        </div>
+
+        {/* Bottom Section: Footer/Call to Action */}
+        <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
+          <p className="text-green-800 text-sm">
+            Ready to get started? Explore our features or contact support for more information.
+          </p>
         </div>
       </div>
     </div>
   );
 }
-
-
-import React from 'react';
-import { Zap, User, Settings, ArrowRight } from 'lucide-react';
-
-interface FeatureCardProps {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-  onClick: () => void;
-}
-
-const FeatureCard: React.FC<FeatureCardProps> = ({ icon, title, description, onClick }) => (
-  <div
-    className="flex items-center justify-between p-6 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition duration-200 cursor-pointer"
-    onClick={onClick}
-  >
-    <div className="flex items-start space-x-4">
-      <div className="p-3 bg-indigo-100 text-indigo-600 rounded-full flex-shrink-0 mt-1">
-        {icon}
-      </div>
-      <div>
-        <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
-        <p className="text-sm text-gray-500">{description}</p>
-      </div>
-    </div>
-    <button className="flex items-center text-indigo-600 hover:text-indigo-800 transition duration-150">
-      Learn More
-      <ArrowRight className="w-4 h-4 ml-1" />
-    </button>
-  </div>
-);
-
 

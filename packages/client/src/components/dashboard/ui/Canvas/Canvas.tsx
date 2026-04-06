@@ -12,7 +12,7 @@ import { socket } from '@/utils/socket-setup.ts';
 import type { SendPointEventSchema } from '@my-app/shared';
 import { Generator } from '../Generator/Generator.tsx';
 
-type DrawLinePayload = Omit<SendPointEventSchema, 'roomId' | 'completeLine'> & {
+type DrawLinePayload = Omit<SendPointEventSchema, 'roomId'> & {
   point: SendPointEventSchema['point'] | null;
 };
 
@@ -29,6 +29,9 @@ export const Canvas = () => {
   );
   const remoteFinishLine = useEventCanvasStore(
     (state) => state.finishLine,
+  );
+  const remoteAbortActiveStroke = useEventCanvasStore(
+    (state) => state.abortActiveStroke,
   );
   const remoteUndo = useEventCanvasStore((state) => state.undo);
   const remoteClearCanvas = useEventCanvasStore(
@@ -93,8 +96,13 @@ export const Canvas = () => {
         return;
       }
 
-      // 'end-point'
-      remoteFinishLine(data.lineId);
+      if (data.flag === 'end-point') {
+        if (data.strokeAborted) {
+          remoteAbortActiveStroke(data.lineId);
+          return;
+        }
+        remoteFinishLine(data.lineId, data.completeLine);
+      }
     };
 
     const handleUndoLine = (obj: { lineId: string }) => {
@@ -113,6 +121,7 @@ export const Canvas = () => {
       socket.off('clear_canvas', handleClearCanvas);
     };
   }, [
+    remoteAbortActiveStroke,
     remoteAddPointToLine,
     remoteClearCanvas,
     remoteFinishLine,

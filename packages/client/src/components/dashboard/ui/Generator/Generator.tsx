@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button"
 import {
-  Dialog,
- 
+  Dialog, 
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
@@ -17,6 +16,7 @@ import {
  } from "@/components/ui/form"
 import { useState } from "react"
 import { useHostDrawingStore } from "@/store/useUserCanvasStore"
+import { Sparkles } from "lucide-react"
 
 
 interface PromptInterface{
@@ -103,7 +103,7 @@ export function Generator() {
         <DialogTrigger asChild className="flex items-center">
           <Button type="submit" variant="outline" disabled={isLoading}>
             {isLoading ? 'Generating...' : 'Generate'} 
-            <i className="fi fi-rr-artificial-intelligence items-center"></i>
+            <Sparkles className="items-center"/>
           </Button>
         </DialogTrigger>
         <GeneratedCode generatedCode={generatedCode} error={error}/>

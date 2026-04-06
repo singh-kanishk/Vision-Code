@@ -15,7 +15,17 @@ export interface Lobby {
 }
 
 export type Point = [number, number, number]; // [x, y, pressure]
-export type Line = { points: Point[], color: string  ,lineId :string};
+export type Shapes = 'rectangle' | 'circle' | 'line' | 'free-hand';
+
+export type Line = {
+  points: Point[];
+  color: string;
+  lineId: string;
+  /** Geometric tools; omit or `free-hand` for pressure strokes. */
+  shape?: Shapes;
+  /** Stroke width used when the line was created (free-hand size / shape outline). */
+  brushSize?: number;
+};
 
 export const PORT ={
     server:3000,
@@ -30,6 +40,8 @@ export interface SendPointEventSchema {
     flag:'start-point'|'end-point'|'mid-point',
     lineId:string,
     color?:string,
+    /** When true with `end-point`, receivers must drop this lineId from active strokes only (no completed line). */
+    strokeAborted?: boolean,
 }
 export interface UndoLineSchema{
   roomId:string,

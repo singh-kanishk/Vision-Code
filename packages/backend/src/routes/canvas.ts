@@ -5,11 +5,11 @@ import { lobbies } from "./lobbies.js";
 
 export function setCanvas(io:Server){
     io.on('connection',(socket:Socket)=>{
-        socket.on('send_point',({roomId,point,flag,lineId,color,completeLine}:SendPointEventSchema)=>{
+        socket.on('send_point',({roomId,point,flag,lineId,color,completeLine,strokeAborted}:SendPointEventSchema)=>{
             const lobby = lobbies.get(roomId);
 
             // Persist completed lines so the server-side lobby state stays consistent.
-            if(flag==='end-point'&&completeLine&&lobby){
+            if(flag==='end-point'&&completeLine&&lobby&&!strokeAborted){
                 lobby.lines = [...lobby.lines, completeLine];
             }
 
@@ -17,7 +17,13 @@ export function setCanvas(io:Server){
                 point: point ?? null,
                 flag,
                 lineId,
-                color
+                color,
+                ...(flag === 'end-point'
+                    ? {
+                        ...(completeLine ? { completeLine } : {}),
+                        ...(strokeAborted ? { strokeAborted: true } : {}),
+                    }
+                    : {}),
             })
             
         })

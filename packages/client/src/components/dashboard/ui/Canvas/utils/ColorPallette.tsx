@@ -41,7 +41,7 @@ export const ColorPallete = () => {
           <Button
             key={color}
             onClick={() => setStrokeColor(color)}
-            className={`w-8 h-8 rounded border-2 transition-all ${
+            className={`w-8 h-8 rounded border-2 transition-all${
               strokeColor === color
                 ? 'border-gray-800 shadow-md scale-110'
                 : 'border-gray-300 hover:border-gray-500'

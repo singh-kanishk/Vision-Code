@@ -14,7 +14,9 @@ export interface EventCanvasState {
   setStrokeColor: (color: string) => void;
   startLine: (lineId: string, point: Point, color?: string) => void;
   addPointToLine: (lineId: string, point: Point) => void;
-  finishLine: (lineId: string) => void;
+  finishLine: (lineId: string, completeLine?: Line) => void;
+  /** Drop an in-progress stroke without committing (e.g. host cancelled a tiny shape). */
+  abortActiveStroke: (lineId: string) => void;
   undo: (lineId: string) => void;
   clearCanvas: () => void;
 }
@@ -54,10 +56,22 @@ export const useEventCanvasStore = create<EventCanvasState>((set, get) => ({
     });
   },
 
-  finishLine: (lineId) => {
+  finishLine: (lineId, completeLine) => {
     set((state) => {
+      const newActiveLines = { ...state.activeLines };
+      delete newActiveLines[lineId];
+
+      if (completeLine) {
+        return {
+          lines: [...state.lines, completeLine],
+          activeLines: newActiveLines,
+        };
+      }
+
       const activeLine = state.activeLines[lineId];
-      if (!activeLine) return state;
+      if (!activeLine) {
+        return { ...state, activeLines: newActiveLines };
+      }
 
       const completedLine: Line = {
         points: activeLine.points,
@@ -65,13 +79,18 @@ export const useEventCanvasStore = create<EventCanvasState>((set, get) => ({
         lineId,
       };
 
-      const newActiveLines = { ...state.activeLines };
-      delete newActiveLines[lineId];
-
       return {
         lines: [...state.lines, completedLine],
         activeLines: newActiveLines,
       };
+    });
+  },
+
+  abortActiveStroke: (lineId) => {
+    set((state) => {
+      if (!state.activeLines[lineId]) return state;
+      const { [lineId]: _removed, ...rest } = state.activeLines;
+      return { activeLines: rest };
     });
   },
 

@@ -3,11 +3,11 @@ import { LoginForm } from "@/components/form/LoginForm";
 import { Button } from "@/components/ui/button"
 import {
   Drawer,
-
   DrawerTrigger,
 } from "@/components/ui/drawer"
 import { RoomManagerDrawer } from "./RoomForm/RoomForm";
 import { useUserDataStore } from "@/store/useUserDataStore";
+import {Users} from 'lucide-react'
 
 
 export function Header() {
@@ -24,7 +24,7 @@ export function Header() {
       <LoginForm/>
       <Drawer>
       <DrawerTrigger asChild onClick={onClick}>
-        <Button variant="outline"> <i className="fi fi-rr-users-alt"> </i></Button>
+        <Button variant="outline"> <Users/></Button>
       </DrawerTrigger>
       <RoomManagerDrawer/>
     </Drawer>
