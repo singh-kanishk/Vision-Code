@@ -1,6 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { useHostDrawingStore } from "@/store/useUserCanvasStore";
+import { FunctionButtons } from "./FunctionButton";
 
 const COLORS = [
   '#1e1e1e',
@@ -16,21 +17,7 @@ const COLORS = [
 export const ColorPallete = () => {
   const strokeColor = useHostDrawingStore((state) => state.strokeColor);
   const setStrokeColor = useHostDrawingStore((state) => state.setStrokeColor);      
-  const undo = useHostDrawingStore((state) => state.undo);
-  
-  // Custom handler to safely grab the ID and pass it to your store
-  const handleUndo = () => {
-    // 1. Get the absolute latest lines array on-demand
-    const currentLines = useHostDrawingStore.getState().lines;
-    
-    // 2. Find the last line safely
-    const lastLine = currentLines.at(-1);
-    
-    // 3. If a line exists, pass its ID to your store's undo function
-    if (lastLine?.lineId) {
-      undo(lastLine.lineId);
-    }
-  };
+ 
       
   return (
     <div className="flex flex-col p-2 gap-2 bg-gray-100 rounded-lg h-fit">
@@ -52,12 +39,8 @@ export const ColorPallete = () => {
         ))}
       </div>
 
-      <div>
-        {/* Call our custom handler instead of undo directly */}
-        <Button onClick={handleUndo}>
-          Undo
-        </Button>
-      </div>
+        <FunctionButtons></FunctionButtons>
+      
     </div>
   );
 };

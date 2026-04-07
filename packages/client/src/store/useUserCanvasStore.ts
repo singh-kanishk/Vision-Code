@@ -153,7 +153,7 @@ export const useHostDrawingStore = create<DrawingState>((set, get) => ({
   },
 
   clearCanvas: () => {
-    set({ lines: [] });
+    set({ lines: [], currentLine: null });
     const roomId = useLobbyStore.getState().lobby?.roomId || '';
     emitClearCanvas(roomId);
   

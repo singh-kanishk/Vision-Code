@@ -36,7 +36,7 @@ export function setCanvas(io:Server){
                 lineId:obj.lineId
             })
         })
-        socket.on('send_clear_canvas',(roomId:string)=>{
+        socket.on('send_clear_canvas',({roomId}:{roomId:string})=>{
             const lobby = lobbies.get(roomId);
             if (lobby) {
                 lobby.lines = [];

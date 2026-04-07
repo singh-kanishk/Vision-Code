@@ -69,7 +69,7 @@ export function ChatBox() {
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button type="submit">Send</Button>
       </div>
       </form>
       </Form>
