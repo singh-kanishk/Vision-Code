@@ -71,7 +71,7 @@ export function Players() {
             >
               <div className="flex items-center gap-3">
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm shadow-inner ${
-                  isHost ? 'bg-gradient-to-br from-amber-200 to-orange-400 text-amber-950 ring-2 ring-amber-200/50' : 'bg-gradient-to-br from-gray-100 to-gray-200 text-gray-700 dark:from-gray-700 dark:to-gray-800 dark:text-gray-200'
+                  isHost ? 'bg-linear-to-br from-amber-200 to-orange-400 text-amber-950 ring-2 ring-amber-200/50' : 'bg-linear-to-br from-gray-100 to-gray-200 text-gray-700 dark:from-gray-700 dark:to-gray-800 dark:text-gray-200'
                 }`}>
                   {user.username.charAt(0).toUpperCase()}
                 </div>

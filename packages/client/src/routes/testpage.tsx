@@ -1,74 +1,93 @@
 import { createFileRoute } from '@tanstack/react-router'
-
+import { Square, Minus, Maximize, X } from 'lucide-react';
 export const Route = createFileRoute('/testpage')({
   component: About,
 })
 
 function About() {
-    return (
-    <div className="min-h-screen bg-gray-100 p-4 sm:p-8 flex items-center justify-center">
-      <div className="w-full max-w-4xl bg-white rounded-xl shadow-lg p-6 sm:p-8 border border-gray-200">
-        {/* Top Section: Header/Title */}
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-          <h1 className="text-2xl font-semibold text-blue-800">
-            Welcome to Our Application
-          </h1>
-          <p className="text-blue-700 text-sm mt-1">
-            A brief overview of the main section.
-          </p>
-        </div>
-
-        {/* Middle Section: Two-column layout */}
-        <div className="flex flex-col md:flex-row gap-6 mb-6">
-          {/* Left Column: Stacked content blocks */}
-          <div className="flex-1 flex flex-col gap-4">
-            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-              <h3 className="font-medium text-gray-800">Feature Highlight One</h3>
-              <p className="text-gray-600 text-sm mt-1">
-                Discover the innovative solutions we offer to streamline your workflow and boost productivity.
-              </p>
+   return (
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4 sm:p-6">
+      <div className="w-full max-w-6xl bg-white rounded-xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden">
+        {/* Window Header */}
+        <div className="flex items-center justify-between p-3 bg-gray-50 border-b border-gray-200 rounded-t-xl">
+          <div className="flex items-center gap-2">
+            {/* Close button */}
+            <div className="w-3 h-3 bg-red-500 rounded-full cursor-pointer hover:bg-red-600 transition-colors" />
+            {/* Minimize button */}
+            <div className="w-3 h-3 bg-yellow-500 rounded-full cursor-pointer hover:bg-yellow-600 transition-colors" />
+            {/* Maximize button */}
+            <div className="w-3 h-3 bg-green-500 rounded-full cursor-pointer hover:bg-green-600 transition-colors" />
+          </div>
+          <span className="text-sm font-medium text-gray-700">Application Window</span>
+          <div className="flex items-center gap-2">
+            {/* Placeholder for other window controls if needed, or just empty for symmetry */}
+            <div className="w-4 h-4 border border-gray-400 rounded-sm flex items-center justify-center text-gray-500">
+              <Minus className="w-3 h-3" />
             </div>
-            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-              <h3 className="font-medium text-gray-800">Feature Highlight Two</h3>
-              <p className="text-gray-600 text-sm mt-1">
-                Our platform is designed with user experience in mind, ensuring ease of use for everyone.
-              </p>
+            <div className="w-4 h-4 border border-gray-400 rounded-sm flex items-center justify-center text-gray-500">
+              <Maximize className="w-3 h-3" />
             </div>
-            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-              <h3 className="font-medium text-gray-800">Feature Highlight Three</h3>
-              <p className="text-gray-600 text-sm mt-1">
-                Experience robust security measures protecting your data at every step.
-              </p>
-            </div>
-            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-              <h3 className="font-medium text-gray-800">Feature Highlight Four</h3>
-              <p className="text-gray-600 text-sm mt-1">
-                Get real-time analytics and insights to make informed decisions faster.
-              </p>
-            </div>
-            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-              <h3 className="font-medium text-gray-800">Feature Highlight Five</h3>
-              <p className="text-gray-600 text-sm mt-1">
-                Seamless integration with your existing tools and services.
-              </p>
+            <div className="w-4 h-4 border border-gray-400 rounded-sm flex items-center justify-center text-gray-500">
+              <X className="w-3 h-3" />
             </div>
           </div>
+        </div>
 
-          {/* Right Column: Image Placeholder */}
-          <div className="flex-1 bg-gradient-to-br from-purple-200 to-indigo-300 rounded-lg border border-purple-300 flex items-center justify-center p-6 min-h-[200px] md:min-h-full">
-            <img
-              src="https://placehold.co/600x400/8b5cf6/ffffff?text=Main+Visual"
-              alt="Placeholder for main visual content"
-              className="w-full h-auto object-cover rounded-md shadow-sm"
+        {/* Main Content Area */}
+        <div className="flex flex-col md:flex-row flex-1 min-h-[400px]">
+          {/* Left Column - Form-like inputs */}
+          <div className="flex flex-col p-6 gap-4 md:w-2/3 border-b md:border-b-0 md:border-r border-gray-200 bg-white">
+            <h2 className="text-xl font-semibold text-gray-800 mb-2">User Information</h2>
+            <input
+              type="text"
+              placeholder="Full Name"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
             />
+            <input
+              type="email"
+              placeholder="Email Address"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+            />
+            <textarea
+              placeholder="Your Message or Description"
+              rows={4}
+              className="w-full p-3 border border-gray-300 rounded-lg resize-y focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+            ></textarea>
+            <button className="mt-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+              Submit
+            </button>
+          </div>
+
+          {/* Right Column - Details and Image/Ad */}
+          <div className="flex flex-col p-6 gap-6 md:w-1/3 bg-gray-50">
+            {/* Top Section - Details/Text Area */}
+            <div className="flex-1 p-4 border border-gray-300 rounded-lg bg-white shadow-sm">
+              <h3 className="text-lg font-medium text-gray-800 mb-2">Additional Details</h3>
+              <p className="text-gray-600 text-sm leading-relaxed">
+                This section provides supplementary information or a summary related to the main content. It can display dynamic data, user preferences, or contextual help.
+              </p>
+              <ul className="list-disc list-inside text-sm text-gray-600 mt-3">
+                <li>Feature A: Enabled</li>
+                <li>Feature B: Active</li>
+                <li>Status: Online</li>
+              </ul>
+            </div>
+
+            {/* Bottom Section - Image/Ad Placeholder */}
+            <div className="h-48 w-full bg-gradient-to-br from-purple-400 to-pink-500 rounded-lg flex items-center justify-center text-white text-center text-lg font-bold shadow-md overflow-hidden">
+              <img
+                src="https://placehold.co/400x200/60a5fa/ffffff?text=Promotional+Content"
+                alt="Promotional Content"
+                className="w-full h-full object-cover"
+              />
+            </div>
           </div>
         </div>
 
-        {/* Bottom Section: Footer/Call to Action */}
-        <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
-          <p className="text-green-800 text-sm">
-            Ready to get started? Explore our features or contact support for more information.
-          </p>
+        {/* Bottom Bar - Status/Footer */}
+        <div className="p-3 bg-gray-50 border-t border-gray-200 rounded-b-xl flex items-center justify-between text-sm text-gray-600">
+          <span>Status: All systems operational.</span>
+          <span>Version 1.0.0</span>
         </div>
       </div>
     </div>
